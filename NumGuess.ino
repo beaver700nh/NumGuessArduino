@@ -1,6 +1,10 @@
 #include <LiquidCrystal.h>
 #include <Keypad.h>
 
+#include <stdio.h>
+#include <ctype.h>
+#include <stdbool.h>
+
 const int ENTER_KEY = '#';
 
 int pressedKey;
@@ -29,7 +33,6 @@ const int RS = 22, EN = 23, DA = 24, DB = 25, DC = 26, DD = 27;
 LiquidCrystal lcd(RS, EN, DA, DB, DC, DD);
 
 int getGuess(void);
-bool keyIsValid(int keyToCheck, int iterator);
 
 void setup(void) {
   lcd.begin(16, 2);
@@ -48,14 +51,6 @@ void loop(void) {
   number = random(1, 1001);
   inputn = getGuess();
 
-  if (inputn == -1)
-  {
-    lcd.setCursor(0, 1);
-    lcd.print("FATAL ERROR");
-    delay(1000);
-    return;
-  }
-
   sprintf(usrgue, "%-4d", inputn);
 
   lcd.setCursor(0, 1);
@@ -70,7 +65,11 @@ int getGuess(void)
 
   for (int i = 0; i < 4; ++i)
   {
-    while (!keyIsValid((pressedKey = key.getKey()), i));
+    do
+    {
+      pressedKey = key.getKey();
+    }
+    while ((!isdigit(pressedKey) || pressedKey != ENTER_KEY) && i != 0);
 
     if (pressedKey == ENTER_KEY)
     {
@@ -101,12 +100,4 @@ int getGuess(void)
   }
 
   return result;
-}
-
-bool keyIsValid(int keyToCheck, int iterator)
-{
-  return (keyToCheck >= '0' && keyToCheck <= '9') || \
-         (keyToCheck == ENTER_KEY && iterator != 0) || \
-         (keyToCheck == '*') || \
-         (keyToCheck == 'A' || keyToCheck == 'B');
 }
