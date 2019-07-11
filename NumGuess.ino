@@ -28,9 +28,7 @@ byte COLPINS[COLS] = { 32, 33, 34, 35 };
 
 Keypad key(makeKeymap(KEYS), ROWPINS, COLPINS, ROWS, COLS);
 
-const int RS = 22, EN = 23, DA = 24, DB = 25, DC = 26, DD = 27;
-
-LiquidCrystal lcd(RS, EN, DA, DB, DC, DD);
+LiquidCrystal lcd(22, 23, 24, 25, 26, 27);
 
 int getGuess(void);
 
