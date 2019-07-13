@@ -10,9 +10,7 @@
 const int ENTER_KEY = '#';
 
 int number;
-int inputn;
-
-char usrgue[4];
+char inputn;
 
 const byte ROWS = 4, COLS = 4;
 
@@ -54,7 +52,7 @@ void loop(void)
   {
     inputn = getGuess(i);
 
-    lcd.setCursor(0, i + 1);
+    lcd.setCursor(i, 1);
     lcd.print(inputn);
   }
 }
@@ -69,7 +67,7 @@ char getGuess(int i)
   {
     guessedKey = key.getKey();
   }
-  while (!isdigit(guessedKey) || (guessedKey != ENTER_KEY && i != 0));
+  while (!(isdigit(guessedKey) || (guessedKey == ENTER_KEY && i != 0)));
 
   if (guessedKey == ENTER_KEY)
   {
