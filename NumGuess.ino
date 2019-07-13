@@ -5,9 +5,9 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-const int ENTER_KEY = '#';
+#undef ENTER_KEY
 
-int pressedKey;
+const int ENTER_KEY = '#';
 
 int number;
 int inputn;
@@ -30,9 +30,10 @@ Keypad key(makeKeymap(KEYS), ROWPINS, COLPINS, ROWS, COLS);
 
 LiquidCrystal lcd(22, 23, 24, 25, 26, 27);
 
-int getGuess(void);
+char getGuess(int i);
 
-void setup(void) {
+void setup(void)
+{
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
   lcd.print("NumGuess");
@@ -42,60 +43,51 @@ void setup(void) {
   lcd.clear();
 }
 
-void loop(void) {
+void loop(void)
+{
   lcd.setCursor(0, 0);
   lcd.print("Guess num 1-1000");
 
   number = random(1, 1001);
-  inputn = getGuess();
-
-  sprintf(usrgue, "%-4d", inputn);
-
-  lcd.setCursor(0, 1);
-  lcd.print(usrgue);
-}
-
-int getGuess(void)
-{
-  char guessDigits[4] = { '.', '.', '.', '.', };
-  bool enterKeyPressed = false;
-  int numbersEntered = 0;
 
   for (int i = 0; i < 4; ++i)
   {
-    do
-    {
-      pressedKey = key.getKey();
-    }
-    while ((!isdigit(pressedKey) || pressedKey != ENTER_KEY) && i != 0);
+    inputn = getGuess(i);
 
-    if (pressedKey == ENTER_KEY)
-    {
-      enterKeyPressed = true;
-      break;
-    }
+    lcd.setCursor(0, i + 1);
+    lcd.print(inputn);
+  }
+}
 
-    guessDigits[i] = pressedKey - '0';
+char getGuess(int i)
+{
+  char guessedKey = '\0';
+  static bool enterKeyPressed = false;
+  static int numbersEntered = 0;
+
+  do
+  {
+    guessedKey = key.getKey();
+  }
+  while (!isdigit(guessedKey) || (guessedKey != ENTER_KEY && i != 0));
+
+  if (guessedKey == ENTER_KEY)
+  {
+    enterKeyPressed = true;
+  }
+  else
+  {
+    guessedKey -= '0';
     ++numbersEntered;
   }
 
-  if (!enterKeyPressed)
+  if (i == 4 && !enterKeyPressed)
   {
-    while ((pressedKey = key.getKey()) != ENTER_KEY)
+    while (key.getKey() != ENTER_KEY)
     {
       /* wait for ENTER */;
     }
   }
 
-  int result = 0;
-
-  for (int j = 0; j < numbersEntered; ++j)
-  {
-    if (guessDigits[j] != '.')
-    {
-      result = result * 10 + guessDigits[j];
-    }
-  }
-
-  return result;
+  return guessedKey;
 }
