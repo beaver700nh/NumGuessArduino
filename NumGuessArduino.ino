@@ -6,8 +6,12 @@
 #include <stdbool.h>
 
 #undef ENTER_KEY
+#undef BKSPC_KEY
+#undef QUITG_KEY
 
 const int ENTER_KEY = '#';
+const int BKSPC_KEY = '*';
+const int QUITG_KEY = 'D';
 
 int realn = 0;
 int input = 0;
@@ -29,13 +33,8 @@ Keypad key(makeKeymap(KEYS), ROWPINS, COLPINS, ROWS, COLS);
 
 LiquidCrystal lcd(22, 23, 24, 25, 26, 27);
 
-/*
- * TODO:
- * > add delete feature
- * > add giveup feature
- */
-
 int getGuess(void);
+bool checkGuess(int *realnum, int guess);
 
 void setup(void)
 {
@@ -52,26 +51,30 @@ void setup(void)
 
 void loop(void)
 {
+  int number = random(1, 1001);
+
   do
   {
     lcd.clear();
     lcd.print("Guess num 1-1000");
 
+//    lcd.setCursor(10, 1);
+//    lcd.print(number);
+
     input = getGuess();
-    match = checkGuess(input);
+
+    if (input == -1)
+    {
+      noInterrupts();
+      while (true)
+      {
+        /* stay here forever; basically terminate program */;
+      }
+    }
+    
+    match = checkGuess(&number, input);
   }
   while (!match);
-
-//  lcd.setCursor(0, 0);
-//  lcd.print("Guess num 1-1000");
-//
-//  for (int i = 0; i < 4; ++i)
-//  {
-//    inputn = getGuess(i);
-//
-//    lcd.setCursor(i, 1);
-//    lcd.print(inputn);
-//  }
 }
 
 int getGuess(void)
@@ -93,12 +96,21 @@ int getGuess(void)
       guessedNumber[curPos] = guessedKey;
       guessedNumber[++curPos] = '\0';
     }
-    else if (guessedKey == BKSPC_KEY)
+    else if (guessedKey == QUITG_KEY)
     {
-      lcd.setCursor(curPos, 1);
-      lcd.print(guessedKey);
+      lcd.clear();
+      lcd.print("You pressed QUIT");
+      lcd.setCursor(0, 1);
+      lcd.print("Terminating prog");
 
+      return -1;
+    }
+    else if (guessedKey == BKSPC_KEY)
+    { 
       guessedNumber[--curPos] = '\0';
+
+      lcd.setCursor(curPos, 1);
+      lcd.print(" ");
     }
     else if (guessedKey == ENTER_KEY)
     {
@@ -116,7 +128,37 @@ int getGuess(void)
   return result;
 }
 
-bool checkGuess(int guess)
+bool checkGuess(int *realnum, int guess)
 {
-  return false;
+  lcd.setCursor(0, 0);
+
+  if (*realnum == guess)
+  {
+    lcd.print("Correct!        ");
+    delay(1500);
+
+    *realnum = random(1, 1001);
+
+    return true;
+  }
+  else
+  {
+    if (guess < 0 || guess > 1000)
+    {
+      lcd.print("Out of range.   ");
+      delay(1500);
+    }
+    if (*realnum < guess)
+    {
+      lcd.print("Lower!          ");
+      delay(1500);
+    }
+    if (*realnum > guess)
+    {
+      lcd.print("Higher!         ");
+      delay(1500);
+    }
+
+    return false;
+  }
 }
