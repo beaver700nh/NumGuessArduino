@@ -9,8 +9,9 @@
 
 const int ENTER_KEY = '#';
 
-int number;
-char inputn;
+int realn = 0;
+int input = 0;
+bool match = false;
 
 const byte ROWS = 4, COLS = 4;
 
@@ -28,64 +29,84 @@ Keypad key(makeKeymap(KEYS), ROWPINS, COLPINS, ROWS, COLS);
 
 LiquidCrystal lcd(22, 23, 24, 25, 26, 27);
 
-char getGuess(int i);
+/*
+ * TODO:
+ * > add delete feature
+ * > add giveup feature
+ */
+
+int getGuess(void);
 
 void setup(void)
 {
+  randomSeed(analogRead(A0));
+
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
   lcd.print("NumGuess");
   lcd.setCursor(0, 1);
   lcd.print("Starting...");
-  delay(1500);
+  delay(1000);
   lcd.clear();
 }
 
 void loop(void)
 {
-  lcd.setCursor(0, 0);
-  lcd.print("Guess num 1-1000");
-
-  number = random(1, 1001);
-
-  for (int i = 0; i < 4; ++i)
-  {
-    inputn = getGuess(i);
-
-    lcd.setCursor(i, 1);
-    lcd.print(inputn);
-  }
-}
-
-char getGuess(int i)
-{
-  char guessedKey = '\0';
-  static bool enterKeyPressed = false;
-  static int numbersEntered = 0;
-
   do
   {
-    guessedKey = key.getKey();
+    input = getGuess();
+    match = checkGuess(input);
   }
-  while (!(isdigit(guessedKey) || (guessedKey == ENTER_KEY && i != 0)));
+  while (!match);
 
-  if (guessedKey == ENTER_KEY)
-  {
-    enterKeyPressed = true;
-  }
-  else
-  {
-    guessedKey -= '0';
-    ++numbersEntered;
-  }
+//  lcd.setCursor(0, 0);
+//  lcd.print("Guess num 1-1000");
+//
+//  for (int i = 0; i < 4; ++i)
+//  {
+//    inputn = getGuess(i);
+//
+//    lcd.setCursor(i, 1);
+//    lcd.print(inputn);
+//  }
+}
 
-  if (i == 4 && !enterKeyPressed)
-  {
-    while (key.getKey() != ENTER_KEY)
-    {
-      /* wait for ENTER */;
-    }
-  }
+int getGuess(void)
+{
+  return 1;
+//  char guessedKey = '\0';
+//  static bool enterKeyPressed = false;
+//  static int numbersEntered = 0;
+//
+//  do
+//  {
+//    guessedKey = key.getKey();
+//  }
+//  while (!(isdigit(guessedKey) || (guessedKey == ENTER_KEY && i != 0)));
+//
+//  if (guessedKey == ENTER_KEY)
+//  {
+//    enterKeyPressed = true;
+//  }
+//  else
+//  {
+//    guessedKey -= '0';
+//    ++numbersEntered;
+//  }
+//
+//  if (i == 4 && !enterKeyPressed)
+//  {
+//    while (key.getKey() != ENTER_KEY)
+//    {
+//      /* wait for ENTER */;
+//    }
+//  }
+//
+//  return guessedKey;
+}
 
-  return guessedKey;
+bool checkGuess(int guess)
+{
+  
+  return false;
 }
