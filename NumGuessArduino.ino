@@ -54,6 +54,9 @@ void loop(void)
 {
   do
   {
+    lcd.clear();
+    lcd.print("Guess num 1-1000");
+
     input = getGuess();
     match = checkGuess(input);
   }
@@ -75,76 +78,45 @@ int getGuess(void)
 {
   int curPos = 0;
 
-  char guessedKey = ' ';
+  char guessedKey = '\0';
   char guessedNumber[5];
 
-  bool valid;
-
-  do
+  while (true)
   {
     guessedKey = key.getKey();
 
-    valid = isdigit(guessedKey) || (guessedKey == ENTER_KEY && curPos > 0);
-
-    if (!valid)
+    if (isdigit(guessedKey) && curPos < 4)
     {
-      continue
-    }
+      lcd.setCursor(curPos, 1);
+      lcd.print(guessedKey);
 
-    if (guessedKey == ENTER_KEY)
-    {
-      if 
+      guessedNumber[curPos] = guessedKey;
+      guessedNumber[++curPos] = '\0';
     }
     else if (guessedKey == BKSPC_KEY)
     {
-      guessedNumber[--curPos] = ' ';
+      lcd.setCursor(curPos, 1);
+      lcd.print(guessedKey);
+
+      guessedNumber[--curPos] = '\0';
     }
-    else if (
-
-    /*
-     * getKey
-     * checkVal
-     * if not valid continue
-     * check keys
-     * store val
-     * 
-     */
+    else if (guessedKey == ENTER_KEY)
+    {
+      break;
+    }
   }
-  while (!done)
 
-//  char guessedKey = '\0';
-//  static bool enterKeyPressed = false;
-//  static int numbersEntered = 0;
-//
-//  do
-//  {
-//    guessedKey = key.getKey();
-//  }
-//  while (!(isdigit(guessedKey) || (guessedKey == ENTER_KEY && i != 0)));
-//
-//  if (guessedKey == ENTER_KEY)
-//  {
-//    enterKeyPressed = true;
-//  }
-//  else
-//  {
-//    guessedKey -= '0';
-//    ++numbersEntered;
-//  }
-//
-//  if (i == 4 && !enterKeyPressed)
-//  {
-//    while (key.getKey() != ENTER_KEY)
-//    {
-//      /* wait for ENTER */;
-//    }
-//  }
-//
-//  return guessedKey;
+  int result = 0;
+
+  for (int i = 0; i < curPos; ++i)
+  {
+    result = result * 10 + guessedNumber[i] - '0';
+  }
+
+  return result;
 }
 
 bool checkGuess(int guess)
 {
-  
   return false;
 }
