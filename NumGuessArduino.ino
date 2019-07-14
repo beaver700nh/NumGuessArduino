@@ -73,7 +73,45 @@ void loop(void)
 
 int getGuess(void)
 {
-  return 1;
+  int curPos = 0;
+
+  char guessedKey = ' ';
+  char guessedNumber[5];
+
+  bool valid;
+
+  do
+  {
+    guessedKey = key.getKey();
+
+    valid = isdigit(guessedKey) || (guessedKey == ENTER_KEY && curPos > 0);
+
+    if (!valid)
+    {
+      continue
+    }
+
+    if (guessedKey == ENTER_KEY)
+    {
+      if 
+    }
+    else if (guessedKey == BKSPC_KEY)
+    {
+      guessedNumber[--curPos] = ' ';
+    }
+    else if (
+
+    /*
+     * getKey
+     * checkVal
+     * if not valid continue
+     * check keys
+     * store val
+     * 
+     */
+  }
+  while (!done)
+
 //  char guessedKey = '\0';
 //  static bool enterKeyPressed = false;
 //  static int numbersEntered = 0;
