@@ -61,17 +61,7 @@ void loop(void)
     lcd.clear();
     lcd.print("Guess num 1-1000");
 
-    input = getGuess();
-
-    if (input == -1)
-    {
-      noInterrupts();
-      while (true)
-      {
-        /* stay here forever; basically terminate program */;
-      }
-    }
-    
+    input = getGuess();    
     match = checkGuess(&number, input);
   }
   while (!match);
@@ -103,9 +93,12 @@ int getGuess(void)
       lcd.clear();
       lcd.print("You pressed QUIT");
       lcd.setCursor(0, 1);
-      lcd.print("Terminating prog");
+      lcd.print("Program stopped.");
 
-      return -1;
+      while (true)
+      {
+        /* freeze; basically terminate program */;
+      }
     }
     else if (guessedKey == BKSPC_KEY)
     { 
@@ -132,7 +125,7 @@ int getGuess(void)
 
 bool checkGuess(int *realnum, int guess)
 {
-  static int tries;
+  static int tries = 0;
 
   lcd.setCursor(0, 0);
 
