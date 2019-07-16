@@ -45,9 +45,9 @@ void setup(void)
 
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
-  lcd.print("NumGuess");
+  lcd.print("NumGuess v1.4");
   lcd.setCursor(0, 1);
-  lcd.print("Starting...");
+  lcd.print("Press D to start");
   waitFor(NEXTB_KEY);
   lcd.clear();
 }
