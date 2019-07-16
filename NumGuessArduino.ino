@@ -100,14 +100,14 @@ int getGuess(void)
         /* freeze; basically terminate program */;
       }
     }
-    else if (guessedKey == BKSPC_KEY)
+    else if (guessedKey == BKSPC_KEY && curPos > 0)
     { 
       guessedNumber[--curPos] = '\0';
 
       lcd.setCursor(curPos, 1);
       lcd.print(" ");
     }
-    else if (guessedKey == ENTER_KEY)
+    else if (guessedKey == ENTER_KEY && curPos > 0)
     {
       break;
     }
