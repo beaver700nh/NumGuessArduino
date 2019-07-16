@@ -45,9 +45,7 @@ void setup(void)
 
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
-  lcd.print("NumGuess v1.4.1");
-  lcd.setCursor(0, 1);
-  lcd.print("Press D to start");
+  lcd.print("NumGuess v1.4.2");
   waitFor(NEXTB_KEY);
   lcd.clear();
 }
@@ -65,8 +63,6 @@ void loop(void)
     match = checkGuess(&number, input);
   }
   while (!match);
-
-  waitFor(NEXTB_KEY);
 }
 
 int getGuess(void)
@@ -139,7 +135,7 @@ bool checkGuess(int *realnum, int guess)
     sprintf(triesStr, "Tries: %-9d", tries);
 
     lcd.print(triesStr);
-    delay(1250);
+    waitFor(NEXTB_KEY);
 
     *realnum = random(1, 1001);
 
@@ -172,6 +168,12 @@ bool checkGuess(int *realnum, int guess)
 
 void waitFor(char keyToWait)
 {
+  if (keyToWait == 'D')
+  {
+    lcd.setCursor(0, 1);
+    lcd.print("D to continue...");
+  }
+
   while (kp.getKey() != keyToWait)
   {
     /* wait for keyToWait to be pressed */;
