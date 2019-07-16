@@ -45,7 +45,7 @@ void setup(void)
 
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
-  lcd.print("NumGuess v1.4");
+  lcd.print("NumGuess v1.4.1");
   lcd.setCursor(0, 1);
   lcd.print("Press D to start");
   waitFor(NEXTB_KEY);
@@ -153,17 +153,17 @@ bool checkGuess(int *realnum, int guess)
     if (guess < 0 || guess > 1000)
     {
       lcd.print("Out of range.   ");
-      delay(1250);
+      waitFor(NEXTB_KEY);
     }
     if (*realnum < guess)
     {
-      lcd.print("Lower!          ");
-      delay(1250);
+      lcd.print("Too high, lower!");
+      waitFor(NEXTB_KEY);
     }
     if (*realnum > guess)
     {
-      lcd.print("Higher!         ");
-      delay(1250);
+      lcd.print("Too low, higher!");
+      waitFor(NEXTB_KEY);
     }
 
     return false;
